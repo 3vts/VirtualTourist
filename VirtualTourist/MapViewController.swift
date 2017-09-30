@@ -10,33 +10,18 @@ import UIKit
 import MapKit
 import CoreData
 
-class MapViewController: UIViewController {
+class MapViewController: CoreDataCollectionViewController {
     
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var editBannerHeight: NSLayoutConstraint!
     let region = MKCoordinateRegion()
-    
-    var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>? {
-        didSet {
-//            executeSearch()
-        }
-    }
+    let epsilon = 0.00001
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setMapLocation()
-        
-        let delegate = UIApplication.shared.delegate as! AppDelegate
-        let stack = delegate.stack
-        
-        //Create FetchRequest
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "locationName", ascending: true)]
-        //Create the FetchedResultsController
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
-        
-        // Do any additional setup after loading the view, typically from a nib.
+        setAnnotations()
     }
 
     @IBAction func addPinGesture(_ sender: UILongPressGestureRecognizer) {
@@ -65,6 +50,16 @@ class MapViewController: UIViewController {
             editButton.title = "Edit"
         }
         
+    }
+    
+    func setAnnotations(){
+        guard let annotations = fetchObjects() as? [Pin] else {
+            return
+        }
+        for annotation in annotations {
+            let coordinates = CLLocationCoordinate2DMake(annotation.latitude, annotation.longitude)
+            createAnnotation(coordinates)
+        }
     }
     
     fileprivate func setMapLocation() {

@@ -103,20 +103,23 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" zoomEnabled="NO" scrollEnabled="NO" rotateEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qaP-Ho-ZM3">
-                                <rect key="frame" x="0.0" y="64" width="375" height="133.5"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="146.5"/>
                                 <connections>
                                     <outlet property="delegate" destination="mT8-oo-CyV" id="x88-0k-SGO"/>
                                 </connections>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IpA-0b-fQV">
-                                <rect key="frame" x="0.0" y="627" width="375" height="40"/>
+                                <rect key="frame" x="0.0" y="601" width="375" height="66"/>
                                 <state key="normal" title="New Collection"/>
+                                <connections>
+                                    <action selector="newCollectionButtonTapped:" destination="mT8-oo-CyV" eventType="touchUpInside" id="j0D-X8-KEC"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Frh-mQ-EXK">
-                                <rect key="frame" x="0.0" y="197.5" width="375" height="429.5"/>
+                                <rect key="frame" x="0.0" y="210.5" width="375" height="390.5"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no-image-yet" translatesAutoresizingMaskIntoConstraints="NO" id="DIW-mt-NGr">
-                                        <rect key="frame" x="-0.5" y="-0.5" width="375" height="430"/>
+                                        <rect key="frame" x="-0.5" y="-0.5" width="375" height="391"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -128,7 +131,7 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="onDrag" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Pct-MA-yyh">
-                                <rect key="frame" x="0.0" y="197.5" width="375" height="429.5"/>
+                                <rect key="frame" x="0.0" y="210.5" width="375" height="390.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Dms-oq-nOd">
                                     <size key="itemSize" width="125" height="125"/>
@@ -147,8 +150,8 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ljA-Mo-Ec1">
                                                     <rect key="frame" x="0.0" y="0.0" width="125" height="125"/>
                                                 </imageView>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="KH4-do-rG1">
-                                                    <rect key="frame" x="53" y="53" width="20" height="20"/>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="KH4-do-rG1">
+                                                    <rect key="frame" x="44" y="44" width="37" height="37"/>
                                                 </activityIndicatorView>
                                             </subviews>
                                         </view>
@@ -180,7 +183,7 @@
                             <constraint firstAttribute="trailing" secondItem="IpA-0b-fQV" secondAttribute="trailing" id="0id-Wn-INh"/>
                             <constraint firstItem="IpA-0b-fQV" firstAttribute="top" secondItem="Pct-MA-yyh" secondAttribute="bottom" id="1u9-gz-cI6"/>
                             <constraint firstItem="Frh-mQ-EXK" firstAttribute="centerX" secondItem="Pct-MA-yyh" secondAttribute="centerX" id="3bN-fO-6fm"/>
-                            <constraint firstItem="IpA-0b-fQV" firstAttribute="height" secondItem="qaP-Ho-ZM3" secondAttribute="height" multiplier="0.3" id="4N1-dx-dTO"/>
+                            <constraint firstItem="IpA-0b-fQV" firstAttribute="height" secondItem="qaP-Ho-ZM3" secondAttribute="height" multiplier="0.45" id="4N1-dx-dTO"/>
                             <constraint firstItem="Pct-MA-yyh" firstAttribute="leading" secondItem="RKH-G9-Sft" secondAttribute="leading" id="78g-DR-7yA"/>
                             <constraint firstAttribute="trailing" secondItem="Pct-MA-yyh" secondAttribute="trailing" id="KEd-s7-clj"/>
                             <constraint firstItem="Frh-mQ-EXK" firstAttribute="leading" secondItem="Pct-MA-yyh" secondAttribute="leading" id="L5S-AJ-D5o"/>
@@ -193,7 +196,7 @@
                             <constraint firstItem="Frh-mQ-EXK" firstAttribute="top" secondItem="Pct-MA-yyh" secondAttribute="top" id="jhF-VD-GIL"/>
                             <constraint firstItem="IpA-0b-fQV" firstAttribute="leading" secondItem="RKH-G9-Sft" secondAttribute="leading" id="kM0-Au-RJB"/>
                             <constraint firstItem="Frh-mQ-EXK" firstAttribute="trailing" secondItem="Pct-MA-yyh" secondAttribute="trailing" id="nSQ-ly-HQg"/>
-                            <constraint firstItem="qaP-Ho-ZM3" firstAttribute="height" secondItem="RKH-G9-Sft" secondAttribute="height" multiplier="0.2" id="o7N-GM-K1H"/>
+                            <constraint firstItem="qaP-Ho-ZM3" firstAttribute="height" secondItem="RKH-G9-Sft" secondAttribute="height" multiplier="0.22" id="o7N-GM-K1H"/>
                             <constraint firstAttribute="trailing" secondItem="qaP-Ho-ZM3" secondAttribute="trailing" id="uvb-EJ-oGc"/>
                         </constraints>
                     </view>
@@ -202,8 +205,9 @@
                     </navigationItem>
                     <connections>
                         <outlet property="backgroundView" destination="Frh-mQ-EXK" id="hDX-l2-I3Y"/>
-                        <outlet property="collectionView" destination="Pct-MA-yyh" id="m7O-X0-bNd"/>
+                        <outlet property="collectionView" destination="Pct-MA-yyh" id="0Y8-We-pJs"/>
                         <outlet property="mapView" destination="qaP-Ho-ZM3" id="xUr-R2-ZU5"/>
+                        <outlet property="newCollectionButton" destination="IpA-0b-fQV" id="6SB-LQ-a9l"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b1n-Kc-rk6" userLabel="First Responder" sceneMemberID="firstResponder"/>

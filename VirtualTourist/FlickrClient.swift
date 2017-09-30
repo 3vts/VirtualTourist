@@ -65,38 +65,44 @@ class FlickrClient {
             guard let photoArray = photos["photo"] as? [[String:AnyObject]] else{
                 return
             }
+            
             for photo in photoArray {
-//                if photo["url_m"] as! String == photoArray[0]["url_m"] as! String {
-                    guard let photoUrlString = photo["url_m"] as? String else {
-                        return
-                    }
-                    guard let photoUrl = URL(string: photoUrlString) else {
-                        return
-                    }
-                    self.downloadImage(url: photoUrl, pin: pin, stack: stack)
-//                }
+                guard let photoUrlString = photo["url_m"] as? String else {
+                    return
+                }
+                let placeholder = UIImagePNGRepresentation(UIImage(named: "default-placeholder")!)! as NSData
+                let photo = Photo(data: placeholder, url: photoUrlString, context: stack.context)
+                photo.pin = pin
+                self.downloadImage(photo)
+            }
+            do{
+                try delegate.stack.context.save()
+            } catch {
+                print("Picha")
             }
         }
     }
     
-    func getDataFromUrl(url: URL, completion: @escaping (_ data: Data?, _  response: URLResponse?, _ error: Error?) -> Void) {
+    // TODO: Use the sessionHandler method
+    private func getDataFromUrl(url: URL, completion: @escaping (_ data: Data?, _  response: URLResponse?, _ error: Error?) -> Void) {
         URLSession.shared.dataTask(with: url) {
             (data, response, error) in
             completion(data, response, error)
             }.resume()
     }
     
-    func downloadImage(url: URL, pin: Pin, stack: CoreDataStack) {
-        getDataFromUrl(url: url) { (data, response, error)  in
+    public func downloadImage(_ photo: Photo) {
+        guard let photoUrlString = photo.url, let photoUrl = URL(string: photoUrlString) else {
+            return
+        }
+        getDataFromUrl(url: photoUrl) { (data, response, error)  in
             guard (error == nil) else {
                 return
             }
             guard let photoData = data as NSData? else {
                 return
             }
-            let flickrPicture = Photo(data: photoData, context: stack.context)
-            flickrPicture.pin = pin
-            print(flickrPicture)
+            photo.data = photoData
         }
     }
     

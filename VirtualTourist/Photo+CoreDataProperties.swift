@@ -2,7 +2,7 @@
 //  Photo+CoreDataProperties.swift
 //  VirtualTourist
 //
-//  Created by Alvaro Santiesteban on 9/24/17.
+//  Created by Alvaro Santiesteban on 9/29/17.
 //  Copyright © 2017 3vts. All rights reserved.
 //
 //
@@ -18,6 +18,7 @@ extension Photo {
     }
 
     @NSManaged public var data: NSData?
+    @NSManaged public var url: String?
     @NSManaged public var pin: Pin?
 
 }

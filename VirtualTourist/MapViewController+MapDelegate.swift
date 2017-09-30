@@ -8,16 +8,38 @@
 
 import Foundation
 import MapKit
+import CoreData
 
 extension MapViewController : MKMapViewDelegate {
     
-    func addPin(gestureRecognizer:UIGestureRecognizer){
+    func addPin(gestureRecognizer: UIGestureRecognizer){
         let touchPoint = gestureRecognizer.location(in: mapView)
         let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+        createAnnotation(newCoordinates)
+        FlickrClient.sharedInstance().getAndStoreImages(newCoordinates)
+        print("Added Annotation")
+    }
+    
+    func fetchObjects(_ predicate: NSPredicate? = nil) -> [AnyObject]? {
+
+        let stack = delegate.stack
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
+        if let predicate = predicate {
+            fr.predicate = predicate
+        }
+//        fr.resultType = .managedObjectResultType
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+            return nil
+        }
+        return fetchedObjects
+    }
+    
+    func createAnnotation(_ newCoordinates: CLLocationCoordinate2D){
         let annotation = MKPointAnnotation()
         annotation.coordinate = newCoordinates
         mapView.addAnnotation(annotation)
-        FlickrClient.sharedInstance().getAndStoreImages(newCoordinates)
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
@@ -28,18 +50,47 @@ extension MapViewController : MKMapViewDelegate {
         UserDefaults.standard.synchronize()
     }
     
+    
+    
+    func fetchAnnotationPin(_ coordinate: CLLocationCoordinate2D) -> Pin? {
+        let predicate = NSPredicate(format: "latitude > %f AND latitude < %f AND longitude > %f AND longitude < %f", coordinate.latitude - epsilon,  coordinate.latitude + epsilon, coordinate.longitude - epsilon, coordinate.longitude + epsilon)
+        if let objects = fetchObjects(predicate)?.first as? Pin {
+            return objects
+        } else{
+            return nil
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showPhotos" {
-            let pin = mapView.selectedAnnotations[0]
-            let photoAlbum = segue.destination as? PhotoAlbumViewController
-            photoAlbum?.pinCoordinates = pin.coordinate
+            guard let selectedAnnotation = mapView.selectedAnnotations.first else {
+                return
+            }
+            let coordinate = selectedAnnotation.coordinate
+            guard let photoAlbum = segue.destination as? PhotoAlbumViewController else {
+                return
+            }
+            photoAlbum.pinCoordinates = selectedAnnotation.coordinate
+            guard let pin = fetchAnnotationPin(coordinate) else {
+                return
+            }
+            photoAlbum.currentPin = pin
+            photoAlbum.mapType = mapView.mapType.rawValue
         }
         
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if editButton.title == "Done"{
-            mapView.removeAnnotation(view.annotation!)
+            let stack = delegate.stack
+            guard let annotation = view.annotation else {
+                return
+            }
+            mapView.removeAnnotation(annotation)
+            guard let pin = fetchAnnotationPin(annotation.coordinate) else {
+                return
+            }
+            stack.context.delete(pin)
         } else {
             performSegue(withIdentifier: "showPhotos", sender: self)
         }

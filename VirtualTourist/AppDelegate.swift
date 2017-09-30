@@ -14,25 +14,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     let stack = CoreDataStack(modelName: "MapDataModel")!
     
-    func preloadData(){
+    func clearData(){
         // Remove previous stuff (if any)
         do {
             try stack.dropAllData()
         } catch {
             print("Error droping all objects in DB")
         }
-        
-        // Create image
-//        let xcodeImage = UIImage(named: "no-image-yet")!
-//
-//        let image = Photo(data: (UIImagePNGRepresentation(xcodeImage) as NSData?)!, context: stack.context)
-//        print(image)
     }
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        preloadData()
+//        clearData()
         return true
     }
 

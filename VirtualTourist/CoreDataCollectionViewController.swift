@@ -12,7 +12,7 @@ import CoreData
 class CoreDataCollectionViewController: UIViewController, UICollectionViewDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
-    
+    let delegate = UIApplication.shared.delegate as! AppDelegate
     
     // MARK: Properties
     
@@ -22,7 +22,9 @@ class CoreDataCollectionViewController: UIViewController, UICollectionViewDelega
             // reload the collection
             fetchedResultsController?.delegate = self
             executeSearch()
-            collectionView?.reloadData()
+            performUIUpdatesOnMain {
+                self.collectionView?.reloadData()
+            }
         }
     }
     
@@ -88,23 +90,7 @@ extension CoreDataCollectionViewController {
 // MARK: - CoreDataCollectionViewController: NSFetchedResultsControllerDelegate
 
 extension CoreDataCollectionViewController: NSFetchedResultsControllerDelegate {
-    
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         
-        let set = IndexSet(integer: sectionIndex)
-        
-        switch (type) {
-        case .insert:
-            collectionView?.insertSections(set)
-        case .delete:
-            collectionView?.deleteSections(set)
-        default:
-            // irrelevant in our case
-            break
-        }
-    }
-    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         switch(type) {
