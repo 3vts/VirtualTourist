@@ -77,6 +77,7 @@
                         <outlet property="editBannerHeight" destination="1t3-Uu-0PF" id="6JP-NY-9xP"/>
                         <outlet property="editButton" destination="bLv-uR-HdC" id="KXe-d9-aQV"/>
                         <outlet property="mapView" destination="1un-fW-ilV" id="W19-fR-qzT"/>
+                        <outlet property="mapViewSelector" destination="lDK-bJ-OH2" id="07U-5n-L4U"/>
                         <segue destination="mT8-oo-CyV" kind="show" identifier="showPhotos" id="HBL-05-n3f"/>
                     </connections>
                 </viewController>

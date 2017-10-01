@@ -20,10 +20,15 @@ class PhotoAlbumCell: UICollectionViewCell {
         }
     }
     
-    func setImage(photo: Photo){
+    func setImage(photo: Photo, _ sender: UIViewController){
         imageView.image = UIImage(data: photo.data! as Data)
         if photo.data == UIImagePNGRepresentation(UIImage(named: "default-placeholder")!)! as NSData {
-            FlickrClient.sharedInstance().downloadImage(photo)
+            activityIndicator.startAnimating()
+            FlickrClient.sharedInstance().downloadImage(photo, { (error) in
+                if error != nil {
+                    FlickrClient.sharedInstance().showErrorMessage(error!, sender)
+                }
+            })
         } else {
             activityIndicator.stopAnimating()
         }

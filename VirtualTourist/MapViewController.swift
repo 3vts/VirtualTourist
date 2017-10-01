@@ -14,6 +14,7 @@ class MapViewController: CoreDataCollectionViewController {
     
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var mapViewSelector: UISegmentedControl!
     @IBOutlet weak var editBannerHeight: NSLayoutConstraint!
     let region = MKCoordinateRegion()
     let epsilon = 0.00001
@@ -39,6 +40,7 @@ class MapViewController: CoreDataCollectionViewController {
         default:
             mapView.mapType = .hybrid
         }
+        UserDefaults.standard.set(sender.selectedSegmentIndex, forKey: "defaultMapType")
     }
 
     @IBAction func editButtonTapped(_ sender: UIBarButtonItem) {
@@ -68,6 +70,10 @@ class MapViewController: CoreDataCollectionViewController {
             let span = MKCoordinateSpanMake(spanLatitude as! CLLocationDegrees, spanLongitude as! CLLocationDegrees)
             let region = MKCoordinateRegionMake(region2D, span)
             self.mapView.setRegion(region, animated: false)
+        }
+        if let mapTypeValue = UserDefaults.standard.value(forKey: "defaultMapType"), let mapType = MKMapType(rawValue: mapTypeValue as! UInt) {
+            self.mapView.mapType = mapType
+            self.mapViewSelector.selectedSegmentIndex = mapTypeValue as! Int
         }
     }
 

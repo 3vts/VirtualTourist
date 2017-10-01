@@ -52,7 +52,7 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
             }
             for photo in photosToDelete{
                 delegate.stack.context.delete(photo)
-                try! delegate.stack.context.save()
+                delegate.stack.save()
             }
             newCollectionButton.setTitle("New Collection", for: .normal)
         default:
@@ -64,10 +64,14 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
             }
             for photo in photoCollection {
                 delegate.stack.context.delete(photo)
-                try! delegate.stack.context.save()
+                delegate.stack.save()
             }
             let randomPage = arc4random_uniform(UInt32(currentPin.pages))
-            FlickrClient.sharedInstance().getAndStoreImages(pinCoordinates, pagenumber: Int(randomPage))
+            FlickrClient.sharedInstance().getAndStoreImages(currentPin, pagenumber: Int(randomPage), { (error) in
+                if error != nil {
+                    FlickrClient.sharedInstance().showErrorMessage(error!, self)
+                }
+            })
             collectionView.reloadData()
         }
     }
@@ -90,7 +94,7 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let picture = fetchedResultsController!.object(at: indexPath) as! Photo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? PhotoAlbumCell
-        cell?.setImage(photo: picture)
+        cell?.setImage(photo: picture, self)
         return cell!
     }
     

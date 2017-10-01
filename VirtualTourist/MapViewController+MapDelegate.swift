@@ -15,9 +15,15 @@ extension MapViewController : MKMapViewDelegate {
     func addPin(gestureRecognizer: UIGestureRecognizer){
         let touchPoint = gestureRecognizer.location(in: mapView)
         let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+        let stack = delegate.stack
+        let pin = Pin(latitude: newCoordinates.latitude, longitude: newCoordinates.longitude, pages: 0, context: stack.context)
+        stack.save()
         createAnnotation(newCoordinates)
-        FlickrClient.sharedInstance().getAndStoreImages(newCoordinates)
-        print("Added Annotation")
+        FlickrClient.sharedInstance().getAndStoreImages(pin, { (error) in
+            if error != nil {
+                FlickrClient.sharedInstance().showErrorMessage(error!, self)
+            }
+        })
     }
     
     func fetchObjects(_ predicate: NSPredicate? = nil) -> [AnyObject]? {

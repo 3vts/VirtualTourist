@@ -37,9 +37,10 @@ class FlickrClient {
         return task
     }
     
-    func getAndStoreImages(_ coordinates: CLLocationCoordinate2D?, pagenumber: Int = 1) {
+    func getAndStoreImages(_ pin: Pin, pagenumber: Int = 1, _ completion: @escaping (_ error: Error?) -> Void) {
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let stack = delegate.stack
+        let coordinates = CLLocationCoordinate2DMake(pin.latitude, pin.longitude)
         let methodParameters = [
             Constants.FlickrParameterKeys.BoundingBox : bboxString(coordinates),
             Constants.FlickrParameterKeys.Extras : Constants.FlickrParameterValues.MediumURL,
@@ -52,6 +53,7 @@ class FlickrClient {
             ] as [String: AnyObject]
         _ = getImagesFromFlickrBySearch(methodParameters) { (data, error) in
             guard (error == nil) else {
+                completion(error)
                 return
             }
             guard let photosDictionary = data as? [String:AnyObject] else {
@@ -60,8 +62,10 @@ class FlickrClient {
             guard let photos = photosDictionary["photos"] as? [String:AnyObject] else {
                 return
             }
-            let pages = photos["pages"] as? Int
-            let pin = Pin(latitude: (coordinates?.latitude)!, longitude: (coordinates?.longitude)!, pages: Int32(pages!), context: stack.context)
+            guard let pages = photos["pages"] as? Int else {
+                return
+            }
+            pin.pages = Int32(pages)
             guard let photoArray = photos["photo"] as? [[String:AnyObject]] else{
                 return
             }
@@ -72,31 +76,34 @@ class FlickrClient {
                 }
                 let placeholder = UIImagePNGRepresentation(UIImage(named: "default-placeholder")!)! as NSData
                 let photo = Photo(data: placeholder, url: photoUrlString, context: stack.context)
+                stack.save()
                 photo.pin = pin
-                self.downloadImage(photo)
-            }
-            do{
-                try delegate.stack.context.save()
-            } catch {
-                print("Picha")
+                self.downloadImage(photo, { (error) in
+                    completion(error)
+                })
             }
         }
     }
     
-    // TODO: Use the sessionHandler method
     private func getDataFromUrl(url: URL, completion: @escaping (_ data: Data?, _  response: URLResponse?, _ error: Error?) -> Void) {
         URLSession.shared.dataTask(with: url) {
             (data, response, error) in
+            let sessionData = self.sessionHandler(data, response, error, "getDataFromUrl")
+            guard let data = sessionData.data else {
+                completion(nil, nil, sessionData.error)
+                return
+            }
             completion(data, response, error)
             }.resume()
     }
     
-    public func downloadImage(_ photo: Photo) {
+    public func downloadImage(_ photo: Photo, _ completion: @escaping (_ error: Error?) -> Void) {
         guard let photoUrlString = photo.url, let photoUrl = URL(string: photoUrlString) else {
             return
         }
         getDataFromUrl(url: photoUrl) { (data, response, error)  in
             guard (error == nil) else {
+                completion(error)
                 return
             }
             guard let photoData = data as NSData? else {
@@ -210,6 +217,21 @@ class FlickrClient {
             return "\(minLong),\(minLat),\(maxLong),\(maxLat)"
         } else {
             return "0,0,0,0"
+        }
+    }
+    
+    /**
+     Function used to show a message given an error
+     
+     - parameter error: Error to be displayed
+     - parameter sender: ViewController to display the error
+     
+     */
+    func showErrorMessage(_ error: Error, _ sender: UIViewController){
+        performUIUpdatesOnMain {
+            let controller = UIAlertController(title: "Oops...", message: error.localizedDescription, preferredStyle: .alert)
+            controller.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            sender.present(controller, animated: true, completion: nil)
         }
     }
     
