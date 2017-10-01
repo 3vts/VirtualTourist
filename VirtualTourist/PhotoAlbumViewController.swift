@@ -73,8 +73,11 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
     
     func getNewCollection(_ currentPin: Pin){
         newCollectionButton.isEnabled = false
-        let randomPage = arc4random_uniform(UInt32(currentPin.pages) + 1)
-        FlickrClient.sharedInstance().getAndStoreImages(currentPin, pagenumber: Int(randomPage), { (error) in
+        guard let valuePerPage = UInt32(Constants.FlickrParameterValues.PerPage) else {
+            return
+        }
+        let maxRandomPage = min(arc4random_uniform(UInt32(currentPin.pages) + 1), Constants.Flickr.MaxImages/valuePerPage)
+        FlickrClient.sharedInstance().getAndStoreImages(currentPin, pagenumber: Int(maxRandomPage), { (error) in
             if error != nil {
                 FlickrClient.sharedInstance().showErrorMessage(error!, self)
             }
