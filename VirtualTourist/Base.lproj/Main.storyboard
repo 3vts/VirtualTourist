@@ -201,9 +201,7 @@
                             <constraint firstAttribute="trailing" secondItem="qaP-Ho-ZM3" secondAttribute="trailing" id="uvb-EJ-oGc"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="TrY-zx-7yq">
-                        <barButtonItem key="backBarButtonItem" id="vU6-C8-6pA"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="TrY-zx-7yq"/>
                     <connections>
                         <outlet property="backgroundView" destination="Frh-mQ-EXK" id="hDX-l2-I3Y"/>
                         <outlet property="collectionView" destination="Pct-MA-yyh" id="0Y8-We-pJs"/>

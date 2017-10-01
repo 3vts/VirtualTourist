@@ -16,7 +16,6 @@ class MapViewController: CoreDataCollectionViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var mapViewSelector: UISegmentedControl!
     @IBOutlet weak var editBannerHeight: NSLayoutConstraint!
-    let region = MKCoordinateRegion()
     let epsilon = 0.00001
     
     override func viewDidLoad() {

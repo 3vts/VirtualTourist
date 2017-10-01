@@ -34,7 +34,6 @@ extension MapViewController : MKMapViewDelegate {
         if let predicate = predicate {
             fr.predicate = predicate
         }
-//        fr.resultType = .managedObjectResultType
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
             return nil

@@ -49,6 +49,8 @@ class FlickrClient {
             Constants.FlickrParameterKeys.Format : Constants.FlickrParameterValues.ResponseFormat,
             Constants.FlickrParameterKeys.NoJSONCallback : Constants.FlickrParameterValues.DisableJSONCallback,
             Constants.FlickrParameterKeys.PerPage : Constants.FlickrParameterValues.PerPage,
+            Constants.FlickrParameterKeys.Tags : Constants.FlickrParameterValues.Tags,
+            Constants.FlickrParameterKeys.TagMode : Constants.FlickrParameterValues.TagMode,
             Constants.FlickrParameterKeys.Page : pagenumber
             ] as [String: AnyObject]
         _ = getImagesFromFlickrBySearch(methodParameters) { (data, error) in

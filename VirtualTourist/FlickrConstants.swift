@@ -26,15 +26,14 @@ struct Constants {
     struct FlickrParameterKeys {
         static let Method = "method"
         static let APIKey = "api_key"
-        static let GalleryID = "gallery_id"
         static let Extras = "extras"
         static let Format = "format"
         static let NoJSONCallback = "nojsoncallback"
-        static let SafeSearch = "safe_search"
-        static let Text = "text"
         static let BoundingBox = "bbox"
         static let Page = "page"
         static let PerPage = "per_page"
+        static let Tags = "tags"
+        static let TagMode = "tag_mode"
     }
     
     // MARK: Flickr Parameter Values
@@ -43,11 +42,10 @@ struct Constants {
         static let APIKey = "e5ca2fa988937be570de3394084145d5"
         static let ResponseFormat = "json"
         static let DisableJSONCallback = "1" /* 1 means "yes" */
-        static let GalleryPhotosMethod = "flickr.galleries.getPhotos"
-        static let GalleryID = "5704-72157622566655097"
         static let MediumURL = "url_m"
-        static let UseSafeSearch = "1"
         static let PerPage = "18"
+        static let Tags = "nature,landscape,park,street,lake,river,bird,trees,snow,green,flowers,sky,beach,sunset"
+        static let TagMode = "or"
     }
     
     // MARK: Flickr Response Keys
