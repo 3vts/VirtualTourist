@@ -22,7 +22,7 @@ class PhotoAlbumCell: UICollectionViewCell {
     
     func setImage(photo: Photo, _ sender: UIViewController){
         imageView.image = UIImage(data: photo.data! as Data)
-        if photo.data == UIImagePNGRepresentation(UIImage(named: "default-placeholder")!)! as NSData {
+        if photo.data == UIImagePNGRepresentation(#imageLiteral(resourceName: "default-placeholder"))! as NSData {
             activityIndicator.startAnimating()
             FlickrClient.sharedInstance().downloadImage(photo, { (error) in
                 if error != nil {

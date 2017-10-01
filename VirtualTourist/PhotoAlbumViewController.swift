@@ -33,6 +33,7 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
         }
         mapView.mapType = mapType
         collectionView.reloadData()
+        loadIfEmpty()
     }
     @IBAction func newCollectionButtonTapped(_ sender: UIButton) {
         guard let text = sender.titleLabel?.text else {
@@ -66,14 +67,20 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                 delegate.stack.context.delete(photo)
                 delegate.stack.save()
             }
-            let randomPage = arc4random_uniform(UInt32(currentPin.pages))
-            FlickrClient.sharedInstance().getAndStoreImages(currentPin, pagenumber: Int(randomPage), { (error) in
-                if error != nil {
-                    FlickrClient.sharedInstance().showErrorMessage(error!, self)
-                }
-            })
-            collectionView.reloadData()
+            getNewCollection(currentPin)
         }
+    }
+    
+    func getNewCollection(_ currentPin: Pin){
+        newCollectionButton.isEnabled = false
+        let randomPage = arc4random_uniform(UInt32(currentPin.pages) + 1)
+        FlickrClient.sharedInstance().getAndStoreImages(currentPin, pagenumber: Int(randomPage), { (error) in
+            if error != nil {
+                FlickrClient.sharedInstance().showErrorMessage(error!, self)
+            }
+        })
+        newCollectionButton.isEnabled = true
+        collectionView.reloadData()
     }
     
     
@@ -118,6 +125,15 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
             return
         }
         selectedItemCount > 0 ? newCollectionButton.setTitle("Remove Selected Pictures", for: .normal) : newCollectionButton.setTitle("New Collection", for: .normal)
+    }
+    
+    func loadIfEmpty(){
+        if collectionView.numberOfItems(inSection: 0) == 0 {
+            guard let currentPin = currentPin else {
+                return
+            }
+            getNewCollection(currentPin)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

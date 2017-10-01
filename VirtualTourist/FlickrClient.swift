@@ -61,22 +61,22 @@ class FlickrClient {
             guard let photosDictionary = data as? [String:AnyObject] else {
                 return
             }
-            guard let photos = photosDictionary["photos"] as? [String:AnyObject] else {
+            guard let photos = photosDictionary[Constants.FlickrResponseKeys.Photos] as? [String:AnyObject] else {
                 return
             }
-            guard let pages = photos["pages"] as? Int else {
+            guard let pages = photos[Constants.FlickrResponseKeys.Pages] as? Int else {
                 return
             }
             pin.pages = Int32(pages)
-            guard let photoArray = photos["photo"] as? [[String:AnyObject]] else{
+            guard let photoArray = photos[Constants.FlickrResponseKeys.Photo] as? [[String:AnyObject]] else{
                 return
             }
             
             for photo in photoArray {
-                guard let photoUrlString = photo["url_m"] as? String else {
+                guard let photoUrlString = photo[Constants.FlickrResponseKeys.MediumURL] as? String else {
                     return
                 }
-                let placeholder = UIImagePNGRepresentation(UIImage(named: "default-placeholder")!)! as NSData
+                let placeholder = UIImagePNGRepresentation(#imageLiteral(resourceName: "default-placeholder"))! as NSData
                 let photo = Photo(data: placeholder, url: photoUrlString, context: stack.context)
                 stack.save()
                 photo.pin = pin
