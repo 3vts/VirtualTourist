@@ -33,7 +33,6 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
         }
         mapView.mapType = mapType
         collectionView.reloadData()
-        loadIfEmpty()
     }
     @IBAction func newCollectionButtonTapped(_ sender: UIButton) {
         guard let text = sender.titleLabel?.text else {
@@ -101,6 +100,7 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
     }
     
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let picture = fetchedResultsController!.object(at: indexPath) as! Photo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? PhotoAlbumCell
@@ -128,15 +128,6 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
             return
         }
         selectedItemCount > 0 ? newCollectionButton.setTitle("Remove Selected Pictures", for: .normal) : newCollectionButton.setTitle("New Collection", for: .normal)
-    }
-    
-    func loadIfEmpty(){
-        if collectionView.numberOfItems(inSection: 0) == 0 {
-            guard let currentPin = currentPin else {
-                return
-            }
-            getNewCollection(currentPin)
-        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

@@ -96,6 +96,7 @@ extension MapViewController : MKMapViewDelegate {
                 return
             }
             stack.context.delete(pin)
+            stack.save()
         } else {
             performSegue(withIdentifier: "showPhotos", sender: self)
         }
